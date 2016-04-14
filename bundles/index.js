@@ -3,7 +3,9 @@ import { render } from 'react-dom';
 import Button from '../blocks/Button';
 import Link from '../blocks/Link';
 import Menu from '../blocks/Menu';
+import Menu2 from '../blocks/Menu2';
 import MenuItem from '../blocks/MenuItem';
+import MenuItem2 from '../blocks/MenuItem2';
 import Popup from '../blocks/Popup';
 import TextInput from '../blocks/TextInput';
 
@@ -108,6 +110,20 @@ class Example extends React.Component {
     renderMenu() {
         return (
             <div>
+                <div style={styles.example}>
+                    <div style={styles.exampleTitle}>Simple Menu2</div>
+                    <Menu2
+                        theme="islands"
+                        renderItem={<MenuItem2/>}
+                        items={[
+                            {value: '1', text: 'menu-item2 1'},
+                            {value: '2', text: 'menu-item2 2'},
+                            {value: '3', text: 'menu-item2 3'},
+                            {value: '4', text: 'menu-item2 4'}
+                        ]}
+                        >
+                    </Menu2>
+                </div>
                 <div style={styles.example}>
                     <div style={styles.exampleTitle}>simple</div>
                     <Menu theme="islands">
