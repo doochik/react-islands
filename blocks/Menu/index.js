@@ -8,8 +8,9 @@ export default class Menu extends BemComponent {
     constructor(props) {
         super(props);
 
-        this._lastHoveredItem = null;
-        this._items = [];
+        this.state = {
+            hoveredIndex: null
+        };
 
         this.listeners = {
             onClick: this.onClick.bind(this),
@@ -17,8 +18,13 @@ export default class Menu extends BemComponent {
         };
 
         this.onItemHover = this.onItemHover.bind(this);
-        this.onItemInit = this.onItemInit.bind(this);
-        this.onItemDestroy = this.onItemDestroy.bind(this);
+    }
+
+    getChildContext() {
+        return {
+            hoveredIndex: this.state.hoveredIndex,
+            ...super.getChildContext()
+        };
     }
 
     render() {
@@ -39,13 +45,11 @@ export default class Menu extends BemComponent {
         const {children} = this.props;
         const {disabled} = this.state;
 
-        Children.forEach(children, (item) => {
+        Children.forEach(children, (item, i) => {
             // disable menu items
             item.props.disabled = disabled ? disabled : item.props.disabled;
+            item.props.hoveredIndex = i;
             item.props.onHover = this.onItemHover;
-            // collect renderedMenuItems
-            item.props.onInit = this.onItemInit;
-            item.props.onDestroy = this.onItemDestroy;
         });
 
         const tabIndex = disabled ? -1 : 0;
@@ -70,26 +74,9 @@ export default class Menu extends BemComponent {
     }
 
     onItemHover(menuItem, hovered) {
-        if (hovered) {
-            this._lastHoveredItem = menuItem;
-        } else {
-            if (this._lastHoveredItem && this._lastHoveredItem.state.hovered) {
-                this._lastHoveredItem.setState({hovered: false});
-            }
-
-            this._lastHoveredItem = null;
-        }
-    }
-
-    onItemInit(menuItem) {
-        this._items.push(menuItem);
-    }
-
-    onItemDestroy(menuItem) {
-        const index = this._items.indexOf(menuItem);
-        if (index >= 0) {
-            this._items.splice(index, 1);
-        }
+        this.setState({
+            hoveredIndex: hovered ? menuItem.props.hoveredIndex : null
+        });
     }
 
     onKeyDown(e) {
@@ -101,10 +88,9 @@ export default class Menu extends BemComponent {
             e.preventDefault();
 
             const dir = e.key === 'ArrowDown' ? 1 : -1;
-            const items = this._items;
-            const len = items.length;
-            const hoveredIdx = this._lastHoveredItem ? Math.max(items.indexOf(this._lastHoveredItem), 0) : 0;
-            let nextIdx = hoveredIdx;
+            const {children} = this.props;
+            const len = children.length;
+            let nextIdx = this.state.hoveredIndex || 0;
             let i = 0;
 
             do {
@@ -119,16 +105,18 @@ export default class Menu extends BemComponent {
                     // overflow
                     return;
                 }
-            } while (items[nextIdx].props.disabled);
+            } while (children[nextIdx].props.disabled);
 
-            this._lastHoveredItem.setState({hovered: false});
-
-            items[nextIdx].setState({hovered: true});
-            this._lastHoveredItem = items[nextIdx];
+            this.setState({hoveredIndex: nextIdx});
         }
     }
 
 }
+
+Menu.childContextTypes = {
+    hoveredIndex: React.PropTypes.number,
+    ...BemComponent.childContextTypes
+};
 
 Menu.defaultProps = {
     onClick() {}

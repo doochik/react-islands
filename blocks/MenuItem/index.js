@@ -13,12 +13,11 @@ export default class MenuItem extends BemComponent {
         };
     }
 
-    componentWillMount() {
-        this.props.onInit(this);
-    }
-    
-    componentWillUnmount() {
-        this.props.onDestroy(this);
+    componentWillReceiveProps(nextProps, nextContext) {
+        const hovered = nextContext.hoveredIndex === this.props.hoveredIndex;
+        if (this.state.hovered !== hovered) {
+            this.setState({hovered});
+        }
     }
 
     render() {
@@ -76,10 +75,12 @@ export default class MenuItem extends BemComponent {
     }
 }
 
+MenuItem.contextTypes = {
+    hoveredIndex: React.PropTypes.number
+};
+
 MenuItem.defaultProps = {
     disabled: false,
     onClick() {},
-    onDestroy() {},
-    onInit() {},
     onHover() {}
 };
