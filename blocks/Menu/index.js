@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Children} from 'react';
 import bem from 'b_';
 import BemComponent, {BemControl} from '../BemComponent';
 
@@ -39,12 +39,13 @@ export default class Menu extends BemComponent {
         const {children} = this.props;
         const {disabled} = this.state;
 
-        children.forEach((item) => {
+        Children.forEach(children, (item) => {
             // disable menu items
             item.props.disabled = disabled ? disabled : item.props.disabled;
             item.props.onHover = this.onItemHover;
             // collect renderedMenuItems
             item.props.onInit = this.onItemInit;
+            item.props.onDestroy = this.onItemDestroy;
         });
 
         const tabIndex = disabled ? -1 : 0;
