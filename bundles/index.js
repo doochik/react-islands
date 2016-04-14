@@ -2,8 +2,12 @@ import React from 'react';
 import { render } from 'react-dom';
 import Button from '../blocks/Button';
 import Link from '../blocks/Link';
+import Menu from '../blocks/Menu';
+import MenuItem from '../blocks/MenuItem';
 import Popup from '../blocks/Popup';
 import TextInput from '../blocks/TextInput';
+
+import MenuDisabledSwitch from './MenuDisabledSwitch';
 
 class Example extends React.Component {
     constructor(...args) {
@@ -43,6 +47,7 @@ class Example extends React.Component {
                 {this.renderLink()}
                 {this.renderTextInput()}
                 {this.renderPopup()}
+                {this.renderMenu()}
             </div>
         );
     }
@@ -99,6 +104,49 @@ class Example extends React.Component {
             </div>
         )
     }
+
+    renderMenu() {
+        return (
+            <div>
+                <div style={styles.example}>
+                    <div style={styles.exampleTitle}>simple</div>
+                    <Menu theme="islands">
+                        <MenuItem theme="islands" size="s">menu-item1</MenuItem>
+                        <MenuItem theme="islands" size="m">menu-item2</MenuItem>
+                        <MenuItem theme="islands" size="l">menu-item3</MenuItem>
+                        <MenuItem theme="islands" size="l">menu-item4</MenuItem>
+                        <MenuItem theme="islands" size="l">menu-item5</MenuItem>
+                        <MenuItem theme="islands" size="l">menu-item6</MenuItem>
+                        <MenuItem theme="islands" size="l">menu-item7</MenuItem>
+                    </Menu>
+                </div>
+                <div style={styles.example}>
+                    <div style={styles.exampleTitle}>with disabled item</div>
+                    <Menu theme="islands">
+                        <MenuItem disabled={true} theme="islands" size="s">menu-item1</MenuItem>
+                        <MenuItem theme="islands" size="m">menu-item2</MenuItem>
+                        <MenuItem theme="islands" size="l">menu-item3</MenuItem>
+                    </Menu>
+                </div>
+                <div style={styles.example}>
+                    <div style={styles.exampleTitle}>with disabled menu</div>
+                    <MenuDisabledSwitch/>
+                </div>
+            </div>    
+        );
+    }
 }
+
+const styles = {
+    example: {
+        border: '1px solid',
+        margin: '10px'
+    },
+
+    exampleTitle: {
+        fontWeight: 'bold',
+        marginBottom: '20px'
+    }
+};
 
 render(React.createElement(Example), document.getElementById('root'));
