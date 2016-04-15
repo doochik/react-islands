@@ -14,6 +14,8 @@ export default class MenuItem extends BemComponent {
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
+        super.componentWillReceiveProps(nextProps, nextContext);
+
         const hovered = nextContext.hoveredIndex === this.props.hoveredIndex;
         if (this.state.hovered !== hovered) {
             this.setState({hovered});

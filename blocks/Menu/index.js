@@ -8,9 +8,9 @@ export default class Menu extends BemComponent {
     constructor(props) {
         super(props);
 
-        this.state = {
+        Object.assign(this.state, {
             hoveredIndex: null
-        };
+        });
 
         this.listeners = {
             onClick: this.onClick.bind(this),
@@ -45,11 +45,14 @@ export default class Menu extends BemComponent {
         const {children} = this.props;
         const {disabled} = this.state;
 
-        Children.forEach(children, (item, i) => {
-            // disable menu items
-            item.props.disabled = disabled ? disabled : item.props.disabled;
-            item.props.hoveredIndex = i;
-            item.props.onHover = this.onItemHover;
+        const items = Children.map(children, (item, i) => {
+            return React.cloneElement(item, {
+                // key: `MenuItem-${i}`,
+                disabled: disabled ? disabled : item.props.disabled,
+                hoveredIndex: i,
+
+                onHover: this.onItemHover
+            });
         });
 
         const tabIndex = disabled ? -1 : 0;
@@ -60,7 +63,7 @@ export default class Menu extends BemComponent {
                     className={className}
                     tabIndex={tabIndex}
                     {...listeners}
-                >{this.props.children}</div>
+                >{items}</div>
             </BemControl>
         );
     }
