@@ -132,6 +132,24 @@ class Example extends React.Component {
                     <div style={styles.exampleTitle}>with disabled menu</div>
                     <MenuDisabledSwitch/>
                 </div>
+                <div style={styles.example}>
+                    <div style={styles.exampleTitle}>mode=check</div>
+                    <Menu theme="islands" size="s" mode="check" onChange={(value) => console.log('Menu check', value)}>
+                        <MenuItem theme="islands" value="val-check-1">menu-item1</MenuItem>
+                        <MenuItem theme="islands" value="val-check-2" checked>menu-item2</MenuItem>
+                        <MenuItem theme="islands" value="val-check-3">menu-item3</MenuItem>
+                        <MenuItem theme="islands" value="val-check-4">menu-item4</MenuItem>
+                    </Menu>
+                </div>
+                <div style={styles.example}>
+                    <div style={styles.exampleTitle}>mode=radio</div>
+                    <Menu theme="islands" size="s" mode="radio" onChange={(value) => console.log('Menu radio', value)}>
+                        <MenuItem theme="islands" value="val-radio-1">menu-item1</MenuItem>
+                        <MenuItem theme="islands" value="val-radio-2">menu-item2</MenuItem>
+                        <MenuItem theme="islands" value="val-radio-3" checked>menu-item3</MenuItem>
+                        <MenuItem theme="islands" value="val-radio-4">menu-item4</MenuItem>
+                    </Menu>
+                </div>
             </div>    
         );
     }

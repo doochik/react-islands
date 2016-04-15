@@ -1,4 +1,4 @@
-import React, {Children} from 'react';
+import React, {Children, PropTypes} from 'react';
 import bem from 'b_';
 import BemComponent, {BemControl} from '../BemComponent';
 
@@ -9,14 +9,16 @@ export default class Menu extends BemComponent {
         super(props);
 
         Object.assign(this.state, {
-            hoveredIndex: null
+            hoveredIndex: null,
+            value: this._recalcValue(this.props.children)
         });
 
         this.listeners = {
-            onClick: this.onClick.bind(this),
             onKeyDown: this.onKeyDown.bind(this)
         };
 
+        this.onItemCheck = this.onItemCheck.bind(this);
+        this.onItemClick = this.onItemClick.bind(this);
         this.onItemHover = this.onItemHover.bind(this);
     }
 
@@ -29,28 +31,33 @@ export default class Menu extends BemComponent {
 
     render() {
         const {disabled, focused} = this.state;
-        const {theme, size} = this.props;
+        const {mode, size, theme} = this.props;
 
         const className = b({
-            theme,
-            size,
             disabled,
-            focused
+            focused,
+            mode,
+            size,
+            theme
         });
 
         return this.renderMenu(className, this.listeners);
     }
 
     renderMenu(className, listeners) {
-        const {children} = this.props;
-        const {disabled} = this.state;
+        const {children, mode} = this.props;
+        const {disabled, value} = this.state;
 
         const items = Children.map(children, (item, i) => {
             return React.cloneElement(item, {
-                // key: `MenuItem-${i}`,
+                checkable: Boolean(mode),
+                // TODO: perf
+                checked: value.indexOf(item.props.value) > -1,
                 disabled: disabled ? disabled : item.props.disabled,
                 hoveredIndex: i,
 
+                onCheck: this.onItemCheck,
+                onClick: this.onItemClick,
                 onHover: this.onItemHover
             });
         });
@@ -74,6 +81,15 @@ export default class Menu extends BemComponent {
         } else {
             this.props.onClick();
         }
+    }
+
+    onItemCheck(menuItem, checked) {
+        this._setVal(menuItem, checked);
+    }
+
+    onItemClick(menuItem) {
+        // pass child event
+        this.props.onItemClick(menuItem);
     }
 
     onItemHover(menuItem, hovered) {
@@ -114,6 +130,54 @@ export default class Menu extends BemComponent {
         }
     }
 
+    _recalcValue(items) {
+        const {mode} = this.props;
+        if (!mode || !Array.isArray(items)) {
+            return [];
+        }
+
+        const value = items
+            .filter((item) => item.props.checked)
+            .map((item) => item.props.value);
+
+        if (mode === 'radio' && value.length > 1) {
+            throw new Error('Menu mode="radio" can has only single checked MenuItem');
+        }
+
+        return value;
+    }
+
+    _setVal(menuItem, checked) {
+        const {mode} = this.props;
+
+        if (!mode) {
+            return;
+        }
+
+        const val = menuItem.getVal();
+        let value = this.state.value;
+
+        if (mode === 'radio') {
+            if (checked) {
+                value = [val];
+            } else {
+                value = [];
+            }
+
+        } else {
+            if (checked) {
+                value.push(val);
+            } else {
+                var index = value.indexOf(val);
+                if (index > -1) {
+                    value.splice(index, 1);
+                }
+            }
+        }
+
+        this.setState({value});
+        this.props.onChange(value);
+    }
 }
 
 Menu.childContextTypes = {
@@ -121,6 +185,15 @@ Menu.childContextTypes = {
     ...BemComponent.childContextTypes
 };
 
+Menu.propTypes = {
+    disabled: PropTypes.bool,
+    mode: PropTypes.oneOf(['check', 'radio']),
+
+    onChange: PropTypes.func,
+    onItemClick: PropTypes.func
+};
+
 Menu.defaultProps = {
-    onClick() {}
+    onChange() {},
+    onItemClick() {}
 };

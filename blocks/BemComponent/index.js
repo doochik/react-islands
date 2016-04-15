@@ -5,6 +5,7 @@ export default class BemComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            checked: props.checked,
             focused: props.focused,
             disabled: props.disabled,
             hovered: false,
@@ -24,12 +25,15 @@ export default class BemComponent extends Component {
         };
     }
 
-    componentWillReceiveProps({ disabled }) {
+    componentWillReceiveProps({ checked, disabled }) {
         if (disabled !== this.state.disabled) {
             this.setState({ disabled });
         }
         if (disabled === true) {
-            this.setState({ focused: false });
+            this.setState({ checked: false, focused: false });
+            
+        } else if (checked !== this.state.checked) {
+            this.setState({ checked });
         }
     }
 

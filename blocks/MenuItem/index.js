@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import bem from 'b_';
 import BemComponent, { BemControl } from '../BemComponent';
 
@@ -12,7 +12,11 @@ export default class MenuItem extends BemComponent {
             onClick: this.onClick.bind(this)
         };
     }
-
+    
+    getVal() {
+        return this.props.value;
+    }
+    
     componentWillReceiveProps(nextProps, nextContext) {
         super.componentWillReceiveProps(nextProps, nextContext);
 
@@ -23,13 +27,14 @@ export default class MenuItem extends BemComponent {
     }
 
     render() {
-        const { disabled, hovered } = this.state;
+        const { checked, disabled, hovered } = this.state;
         const { theme, size } = this.props;
 
         const className = b({
             theme,
             size,
 
+            checked,
             disabled,
             hovered
         });
@@ -52,7 +57,13 @@ export default class MenuItem extends BemComponent {
         if (this.state.disabled) {
             e.preventDefault();
         } else {
-            this.props.onClick();
+            if (this.props.checkable) {
+                const newChecked = !this.state.checked;
+                this.setState({checked: newChecked});
+                this.props.onCheck(this, newChecked);
+            }
+
+            this.props.onClick(this);
         }
     }
 
@@ -77,12 +88,24 @@ export default class MenuItem extends BemComponent {
     }
 }
 
+MenuItem.propTypes = {
+    disabled: PropTypes.bool,
+    checkable: PropTypes.bool,
+
+    onCheck: PropTypes.func,
+    onClick: PropTypes.func,
+    onHover: PropTypes.func
+};
+
 MenuItem.contextTypes = {
-    hoveredIndex: React.PropTypes.number
+    hoveredIndex: PropTypes.number
 };
 
 MenuItem.defaultProps = {
     disabled: false,
+    checkable: false,
+
+    onCheck() {},
     onClick() {},
     onHover() {}
 };
