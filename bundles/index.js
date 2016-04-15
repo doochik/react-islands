@@ -110,22 +110,22 @@ class Example extends React.Component {
             <div>
                 <div style={styles.example}>
                     <div style={styles.exampleTitle}>simple</div>
-                    <Menu theme="islands">
-                        <MenuItem theme="islands" size="s">menu-item1</MenuItem>
-                        <MenuItem theme="islands" size="m">menu-item2</MenuItem>
-                        <MenuItem theme="islands" size="l">menu-item3</MenuItem>
-                        <MenuItem theme="islands" size="l">menu-item4</MenuItem>
-                        <MenuItem theme="islands" size="l">menu-item5</MenuItem>
-                        <MenuItem theme="islands" size="l">menu-item6</MenuItem>
-                        <MenuItem theme="islands" size="l">menu-item7</MenuItem>
+                    <Menu theme="islands" size="s">
+                        <MenuItem theme="islands">menu-item1</MenuItem>
+                        <MenuItem theme="islands">menu-item2</MenuItem>
+                        <MenuItem theme="islands">menu-item3</MenuItem>
+                        <MenuItem theme="islands">menu-item4</MenuItem>
+                        <MenuItem theme="islands">menu-item5</MenuItem>
+                        <MenuItem theme="islands">menu-item6</MenuItem>
+                        <MenuItem theme="islands">menu-item7</MenuItem>
                     </Menu>
                 </div>
                 <div style={styles.example}>
                     <div style={styles.exampleTitle}>with disabled item</div>
-                    <Menu theme="islands">
+                    <Menu theme="islands" size="m">
                         <MenuItem disabled={true} theme="islands" size="s">menu-item1</MenuItem>
-                        <MenuItem theme="islands" size="m">menu-item2</MenuItem>
-                        <MenuItem theme="islands" size="l">menu-item3</MenuItem>
+                        <MenuItem theme="islands">menu-item2</MenuItem>
+                        <MenuItem theme="islands">menu-item3</MenuItem>
                     </Menu>
                 </div>
                 <div style={styles.example}>

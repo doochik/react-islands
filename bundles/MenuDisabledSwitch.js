@@ -25,10 +25,10 @@ export default class MenuDisabledSwitch extends React.Component {
                 <Button onClick={this.handleClick} theme="islands" size="l">
                     {this.state.disabled ? 'Enable' : 'Disable'}
                 </Button>
-                <Menu theme="islands" disabled={this.state.disabled}>
-                    <MenuItem theme="islands" size="s">menu-item1</MenuItem>
-                    <MenuItem theme="islands" size="m">menu-item2</MenuItem>
-                    <MenuItem theme="islands" size="l">menu-item3</MenuItem>
+                <Menu theme="islands" disabled={this.state.disabled} size="l">
+                    <MenuItem theme="islands">menu-item1</MenuItem>
+                    <MenuItem theme="islands">menu-item2</MenuItem>
+                    <MenuItem theme="islands">menu-item3</MenuItem>
                 </Menu>
             </div>
         );
